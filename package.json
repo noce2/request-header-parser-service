@@ -1,0 +1,33 @@
+{
+  "name": "request-header-parser-service",
+  "version": "1.0.0",
+  "description": "Implementation of Free Code Camp project of the same name",
+  "engines": {
+    "node": "^6.10.3"
+  },
+  "main": "app.js",
+  "scripts": {
+    "test": "mocha ./tests/*.test.js",
+    "devstart": "nodemon ./app.js",
+    "start": "node ./app.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/noce2/request-header-parser-service.git"
+  },
+  "author": "Nsikan Essien",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/noce2/request-header-parser-service/issues"
+  },
+  "homepage": "https://github.com/noce2/request-header-parser-service#readme",
+  "dependencies": {
+    "express": "^4.15.3"
+  },
+  "devDependencies": {
+    "eslint": "^4.0.0",
+    "eslint-config-airbnb-base": "^11.2.0",
+    "eslint-plugin-import": "^2.3.0",
+    "nodemon": "^1.11.0"
+  }
+}
