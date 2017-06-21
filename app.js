@@ -13,7 +13,7 @@ myapp.set('view engine', 'pug');
 
 // Routing
 
-myapp.get('/', (req, res) => {
+myapp.get('/', function(req, res){
   res.render('index');
 });
 
