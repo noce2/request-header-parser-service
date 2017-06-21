@@ -3,7 +3,7 @@ const express = require('express');
 const path = require('path');
 const ConstReqParser = require('./app/customReqParser.class').CustomReqParser;
 
-const myapp = express();
+let myapp = express();
 
 // Initial Settings
 myapp.use('/public', express.static(path.join(__dirname, 'public')));
@@ -13,7 +13,7 @@ myapp.set('view engine', 'pug');
 
 // Routing
 
-myapp.get('/', function(req, res){
+myapp.get('/', (req, res) => {
   res.render('index');
 });
 
