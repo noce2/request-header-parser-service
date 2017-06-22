@@ -11,6 +11,11 @@ html
             href="/public/stylesheets/styles.css",
             type='text/css'
             )
+        link(
+        rel="shortcut icon", 
+        href="/public/assets/favicon.ico",
+        type='image/vnd.microsoft.icon'
+        )
     body
         div(class="container")
             h1 Welcome to My Request Header Microservice
@@ -18,10 +23,10 @@ html
             p 
                 | The API can be accessed by appending 'sabesquiensoy' to the URL. 
             p
-                | The server will respond with a JSON request containing the ipadress,
+                | The server will respond with a JSON request containing the ipaddress,
                 | request langauage and request operating system.
             h3 Example Usage
             p 
-                |  <em>Request</em>: /sabesquiensoy
+                |  <em>Request</em>: https://stormy-fortress-66721.herokuapp.com/sabesquiensoy
             p  
-                |  <em>Response</em>: {}
+                |  <em>Response</em>: {"ipaddress":"::ffff:10.30.24.121","language":"en-GB,en-US","OS":"iPad; CPU OS 9_1 like Mac OS X"}
