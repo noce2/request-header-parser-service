@@ -9,7 +9,7 @@
   "scripts": {
     "test-watch": "nodemon --exec \"npm test\"",
     "test": "mocha ./app/*.test.js --reporter nyan && mocha ./tests/*.test.js --reporter nyan",
-    "devstart": "nodemon ./app.js",
+    "devstart": "nodemon --exec \"npm start\"",
     "start": "node ./app.js"
   },
   "repository": {
