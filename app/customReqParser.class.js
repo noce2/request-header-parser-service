@@ -15,11 +15,11 @@ CustomReqParser.createFromReq = (_request) => {
   let language;
   let OS;
 
-  if (_request && _request.socket && _request.headers) {
-    if (_request.socket.remoteAddress) {
+  if (_request && _request.ip && _request.headers) {
+    if (_request.ip) {
       // for the above I decided to access it via Node's API.
       // no particular reason
-      ipaddress = _request.socket.remoteAddress;
+      ipaddress = _request.ip;
     }
 
     if (_request.headers['accept-language']) {

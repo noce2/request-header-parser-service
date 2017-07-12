@@ -11,6 +11,7 @@ myapp.use('/public', express.static(path.join(__dirname, 'public')));
 myapp.set('port', port);
 myapp.set('views', './views');
 myapp.set('view engine', 'pug');
+myapp.set('trust proxy', true);
 
 function errorHandler(error) {
   console.log(`error message: ${error}`);
