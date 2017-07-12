@@ -12,6 +12,11 @@ myapp.set('port', port);
 myapp.set('views', './views');
 myapp.set('view engine', 'pug');
 
+function errorHandler(error) {
+  console.log(`error message: ${error}`);
+  return { error: `encountered server ${error}` };
+}
+
 // Routing
 
 myapp.get('/', (req, res) => {
@@ -25,27 +30,50 @@ myapp.get('/sabesquiensoy', (req, res) => {
 myapp.get('/dondeestoy', (req, res) => {
   const ipaddressdirty = ConstReqParser.createFromReq(req).ipaddress;
   const ipPattern = /(\d+\.\d+\.\d+\.\d+)/g;
-  if(ipaddressdirty.match(ipPattern)){
-    const ipaddress = ipaddressdirty.match(ipPattern)[0];
+  if(ipaddressdirty.match(ipPattern) || !process.env.NODE_ENV){
+    let ipaddress;
+    if(process.env.NODE_ENV){
+      // i.e its in production
+      ipaddress = ipaddressdirty.match(ipPattern)[0];
+    } else {
+      ipaddress = '178.97.15.242';
+    }
+    
     const _options = {
-      hostname: 'http://ip-api.com',
+      hostname: 'ip-api.com',
       path: `/json/${ipaddress}`,
     };
-    const _serverReq = http.request(_options);
-    _serverReq.on('response', (response) => {
-      res.send(response.body);
+    const _serverReq = http.get(_options, (response) => {
+      try {
+        if (response.statusCode !== 200){
+          throw new Error('response with wrong status code');
+        } else if (!(/application\/json/).test(response.headers['content-type'])) {
+          throw new Error('response with wrong data type');
+        }
+        response.setEncoding('utf8');
+        let rawData = '';
+        let i = 1;
+        response.on('data', (chunk)=> {
+          console.log(`data received ${i} times`);
+          rawData += chunk;
+          i += 1;
+        });
+        response.on('end', () => {
+          try {
+            const parsedResponse = JSON.parse(rawData);
+            console.log(parsedResponse);
+            res.send(rawData);
+          } catch (_error) {
+            res.send(errorHandler(_error));
+          }
+        });
+      } catch (_err) {
+        res.send(errorHandler(_err));
+      }
     });
-    _serverReq.end();
-
   } else {
-    res.send('no ip address found');
+    res.send(JSON.stringify({error: 'no ip address found'}));
   }
-  
-  /*
-  let _serverReq = http.request(_options, ()=> {
-
-  });
-  */
 });
 // Starting the application
 myapp.listen(myapp.get('port'), () => {
