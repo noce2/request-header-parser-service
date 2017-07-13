@@ -29,6 +29,9 @@ myapp.get('/sabesquiensoy', (req, res) => {
 });
 
 myapp.get('/dondeestoy', (req, res) => {
+  res.set({
+    'Access-Control-Allow-Origin': ['https://s.codepen.io/', 'https://noce2.github.io/'],
+  });
   const ipaddressdirty = ConstReqParser.createFromReq(req).ipaddress;
   const ipPattern = /(\d+\.\d+\.\d+\.\d+)/g;
   if(ipaddressdirty.match(ipPattern) || !process.env.NODE_ENV){
