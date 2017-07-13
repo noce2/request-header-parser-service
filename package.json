@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "description": "Implementation of Free Code Camp project of the same name",
   "engines": {
-    "node": "^6.10.3"
+    "node": "^6.11.1"
   },
   "main": "app.js",
   "scripts": {
