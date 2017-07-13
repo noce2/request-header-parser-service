@@ -30,7 +30,7 @@ myapp.get('/sabesquiensoy', (req, res) => {
 
 myapp.get('/dondeestoy', (req, res) => {
   res.set({
-    'Access-Control-Allow-Origin': ['https://s.codepen.io/', 'https://noce2.github.io/'],
+    'Access-Control-Allow-Origin': 'https://s.codepen.io/',
   });
   const ipaddressdirty = ConstReqParser.createFromReq(req).ipaddress;
   const ipPattern = /(\d+\.\d+\.\d+\.\d+)/g;
