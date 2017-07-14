@@ -29,9 +29,15 @@ myapp.get('/sabesquiensoy', (req, res) => {
 });
 
 myapp.get('/dondeestoy', (req, res) => {
-  res.set({
-    'Access-Control-Allow-Origin': 'https://s.codepen.io/',
-  });
+  const permissibleUrls = [/https:\/\/s\.codepen\.io\/?/g, /https:\/\/noce2\.github\.io\/?/g];
+  const reqOrigin = req.get('Origin');
+  const detectedUrl = permissibleUrls.filter(each => each.test(reqOrigin));
+  if (detectedUrl.length === 1) {
+    const allowAbleOrigin = reqOrigin;
+    res.set({
+      'Access-Control-Allow-Origin': allowAbleOrigin,
+    });
+  }
   const ipaddressdirty = ConstReqParser.createFromReq(req).ipaddress;
   const ipPattern = /(\d+\.\d+\.\d+\.\d+)/g;
   if(ipaddressdirty.match(ipPattern) || !process.env.NODE_ENV){
