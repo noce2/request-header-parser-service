@@ -85,6 +85,32 @@ myapp.get('/dondeestoy', (req, res) => {
     res.send(JSON.stringify({error: 'no ip address found'}));
   }
 });
+
+myapp.get('/dameelclima', (req, res) => {
+  const apiTarget = 'api.openweathermap.org/data/2.5/weather';
+  const queryParams = req.query;
+  const querystring = `?lat=${queryParams.lat}&lon=${queryParams.lon}&APPID=${queryParams.APPID}&units=${queryParams.units}`;
+  const _options = {
+    hostname: apiTarget,
+    path: queryParams,
+  };
+  http.get(_options, (_res) => {
+    let receivedData = '';
+    let receivedTimes = 1;
+    let jsonResult;
+    console.log(`Status: ${_res.statusCode}`);
+    _res.setEncoding('utf8');
+    _res.on('data', (chunk) => {
+      console.log(`data received ${receivedTimes} times`);
+      receivedData += chunk;
+      receivedTimes += 1;
+    });
+    _res.on('end', () => {
+      res.send(receivedData);
+    });
+  });
+});
+
 // Starting the application
 myapp.listen(myapp.get('port'), () => {
   // console.log(`now listening at ${myapp.get('port')}`);
