@@ -32,12 +32,9 @@ myapp.get('/dondeestoy', (req, res) => {
   const permissibleUrls = [/https:\/\/s\.codepen\.io\/?/g, /https:\/\/noce2\.github\.io\/?/g];
   const reqOrigin = req.get('Origin');
   const detectedUrl = permissibleUrls.filter(each => each.test(reqOrigin));
-  if (detectedUrl.length === 1) {
-    const allowAbleOrigin = reqOrigin;
-    res.set({
-      'Access-Control-Allow-Origin': allowAbleOrigin,
-    });
-  }
+  res.set({
+    'Access-Control-Allow-Origin': '*',
+  });
   const ipaddressdirty = ConstReqParser.createFromReq(req).ipaddress;
   const ipPattern = /(\d+\.\d+\.\d+\.\d+)/g;
   if (ipaddressdirty.match(ipPattern) || !process.env.NODE_ENV) {
@@ -94,11 +91,9 @@ myapp.get('/dameelclima', (req, res) => {
   const permissibleUrls = [/https:\/\/s\.codepen\.io\/?/g, /https:\/\/noce2\.github\.io\/?/g];
   const reqOrigin = req.get('Origin');
   const detectedUrl = permissibleUrls.filter(each => each.test(reqOrigin));
-  if (detectedUrl.length === 1) {
-    const allowAbleOrigin = reqOrigin;
-    res.set({
-      'Access-Control-Allow-Origin': allowAbleOrigin,
-    });
+  res.set({
+    'Access-Control-Allow-Origin': '*',
+  });
   }
   const apiTarget = 'api.openweathermap.org/data/2.5/weather';
   const queryParams = req.query;
