@@ -40,22 +40,22 @@ myapp.get('/dondeestoy', (req, res) => {
   }
   const ipaddressdirty = ConstReqParser.createFromReq(req).ipaddress;
   const ipPattern = /(\d+\.\d+\.\d+\.\d+)/g;
-  if(ipaddressdirty.match(ipPattern) || !process.env.NODE_ENV){
+  if (ipaddressdirty.match(ipPattern) || !process.env.NODE_ENV) {
     let ipaddress;
-    if(process.env.NODE_ENV){
+    if (process.env.NODE_ENV) {
       // i.e its in production
       ipaddress = ipaddressdirty.match(ipPattern)[0];
     } else {
       ipaddress = '178.97.15.242';
     }
-    
+
     const _options = {
       hostname: 'ip-api.com',
       path: `/json/${ipaddress}`,
     };
     const _serverReq = http.get(_options, (response) => {
       try {
-        if (response.statusCode !== 200){
+        if (response.statusCode !== 200) {
           throw new Error('response with wrong status code');
         } else if (!(/application\/json/).test(response.headers['content-type'])) {
           throw new Error('response with wrong data type');
@@ -74,41 +74,58 @@ myapp.get('/dondeestoy', (req, res) => {
             console.log(parsedResponse);
             res.send(rawData);
           } catch (_error) {
-            res.send(errorHandler(_error));
+            const message = errorHandler(_error);
+            console.log(message);
+            res.send(message);
           }
         });
       } catch (_err) {
-        res.send(errorHandler(_err));
+        const message = errorHandler(_err);
+        console.log(message);
+        res.send(message);
       }
     });
   } else {
-    res.send(JSON.stringify({error: 'no ip address found'}));
+    res.send(JSON.stringify({ error: 'no ip address found' }));
   }
 });
 
 myapp.get('/dameelclima', (req, res) => {
   const apiTarget = 'api.openweathermap.org/data/2.5/weather';
   const queryParams = req.query;
-  const querystring = `?lat=${queryParams.lat}&lon=${queryParams.lon}&APPID=${queryParams.APPID}&units=${queryParams.units}`;
-  const _options = {
-    hostname: apiTarget,
-    path: queryParams,
-  };
-  http.get(_options, (_res) => {
-    let receivedData = '';
-    let receivedTimes = 1;
-    let jsonResult;
-    console.log(`Status: ${_res.statusCode}`);
-    _res.setEncoding('utf8');
-    _res.on('data', (chunk) => {
-      console.log(`data received ${receivedTimes} times`);
-      receivedData += chunk;
-      receivedTimes += 1;
+  if (queryParams.lat && queryParams.lon && queryParams.APPID && queryParams.units) {
+    const querystring = `?lat=${queryParams.lat}&lon=${queryParams.lon}&APPID=${queryParams.APPID}&units=${queryParams.units}`;
+    const options = {
+      hostname: apiTarget,
+      path: querystring,
+    };
+    http.get(options, (_res) => {
+      let receivedData = '';
+      let receivedTimes = 1;
+      try {
+        if (_res.statusCode !== 200) {
+          throw new Error('response with wrong status code');
+        } else if (!(/application\/json/).test(_res.headers['content-type'])) {
+          throw new Error('response with wrong data type');
+        }
+        _res.setEncoding('utf8');
+        _res.on('data', (chunk) => {
+          console.log(`data received ${receivedTimes} times`);
+          receivedData += chunk;
+          receivedTimes += 1;
+        });
+        _res.on('end', () => {
+          res.send(receivedData);
+        });
+      } catch (_err) {
+        const message = errorHandler(_err);
+        console.log(message);
+        res.send(message);
+      }
     });
-    _res.on('end', () => {
-      res.send(receivedData);
-    });
-  });
+  } else {
+    res.send(JSON.stringify({ error: 'the necessary query parameters were not attached to the request' }));
+  }
 });
 
 // Starting the application
