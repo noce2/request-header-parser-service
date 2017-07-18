@@ -91,6 +91,15 @@ myapp.get('/dondeestoy', (req, res) => {
 });
 
 myapp.get('/dameelclima', (req, res) => {
+  const permissibleUrls = [/https:\/\/s\.codepen\.io\/?/g, /https:\/\/noce2\.github\.io\/?/g];
+  const reqOrigin = req.get('Origin');
+  const detectedUrl = permissibleUrls.filter(each => each.test(reqOrigin));
+  if (detectedUrl.length === 1) {
+    const allowAbleOrigin = reqOrigin;
+    res.set({
+      'Access-Control-Allow-Origin': allowAbleOrigin,
+    });
+  }
   const apiTarget = 'api.openweathermap.org/data/2.5/weather';
   const queryParams = req.query;
   if (queryParams.lat && queryParams.lon && queryParams.APPID && queryParams.units) {
