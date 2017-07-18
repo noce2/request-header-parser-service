@@ -94,10 +94,10 @@ myapp.get('/dameelclima', (req, res) => {
   res.set({
     'Access-Control-Allow-Origin': '*',
   });
-  const apiTarget = 'api.openweathermap.org/data/2.5/weather';
+  const apiTarget = 'api.openweathermap.org';
   const queryParams = req.query;
   if (queryParams.lat && queryParams.lon && queryParams.APPID && queryParams.units) {
-    const querystring = `?lat=${queryParams.lat}&lon=${queryParams.lon}&APPID=${queryParams.APPID}&units=${queryParams.units}`;
+    const querystring = `/data/2.5/weather?lat=${queryParams.lat}&lon=${queryParams.lon}&APPID=${queryParams.APPID}&units=${queryParams.units}`;
     const options = {
       hostname: apiTarget,
       path: querystring,
