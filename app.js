@@ -28,7 +28,8 @@ myapp.get('/sabesquiensoy', (req, res) => {
   res.send(JSON.stringify(ConstReqParser.createFromReq(req)));
 });
 
-myapp.get('/dondeestoy', (req, res) => {
+myapp.get('/dameelclima', (req, res) => {
+  let latAndLon = {};
   const permissibleUrls = [/https:\/\/s\.codepen\.io\/?/g, /https:\/\/noce2\.github\.io\/?/g];
   const reqOrigin = req.get('Origin');
   const detectedUrl = permissibleUrls.filter(each => each.test(reqOrigin));
@@ -71,17 +72,17 @@ myapp.get('/dondeestoy', (req, res) => {
           try {
             const parsedResponse = JSON.parse(rawData);
             console.log(parsedResponse);
-            res.send(rawData);
+            latAndLon.lat = parsedResponse.lat;
+            latAndLon.lon = parsedResponse.lon;
+            findAndSendWeather(latAndLon, res);
           } catch (_error) {
             const message = errorHandler(_error);
             console.log(message);
-            res.send(message);
           }
         });
       } catch (_err) {
         const message = errorHandler(_err);
         console.log(message);
-        res.send(message);
       }
     });
   } else {
@@ -89,17 +90,22 @@ myapp.get('/dondeestoy', (req, res) => {
   }
 });
 
-myapp.get('/dameelclima', (req, res) => {
+function findAndSendWeather(locationData, res){
   const permissibleUrls = [/https:\/\/s\.codepen\.io\/?/g, /https:\/\/noce2\.github\.io\/?/g];
   const reqOrigin = req.get('Origin');
   const detectedUrl = permissibleUrls.filter(each => each.test(reqOrigin));
-  if (detectedUrl.length === 1){
+  if (detectedUrl.length === 1) {
     res.set({
       'Access-Control-Allow-Origin': reqOrigin,
     });
   }
   const apiTarget = 'api.openweathermap.org';
-  const queryParams = req.query;
+  const queryParams = {
+    lat: locationData.lat,
+    lon: locationData.lon,
+    APPID: '078ecb2576afa59e6e132d1ce4c68684',
+    units: 'metric',
+  };
   if (queryParams.lat && queryParams.lon && queryParams.APPID && queryParams.units) {
     const querystring = `/data/2.5/weather?lat=${queryParams.lat}&lon=${queryParams.lon}&APPID=${queryParams.APPID}&units=${queryParams.units}`;
     const options = {
@@ -133,7 +139,7 @@ myapp.get('/dameelclima', (req, res) => {
   } else {
     res.send(JSON.stringify({ error: 'the necessary query parameters were not attached to the request' }));
   }
-});
+}
 
 // Starting the application
 myapp.listen(myapp.get('port'), () => {
