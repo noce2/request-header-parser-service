@@ -24,7 +24,7 @@
   "homepage": "https://github.com/noce2/request-header-parser-service#readme",
   "dependencies": {
     "express": "^4.15.3",
-    "pug": "^2.0.0-rc.2"
+    "pug": "^3.0.1"
   },
   "devDependencies": {
     "eslint": "^4.0.0",
